@@ -1,17 +1,17 @@
-# PC-Sampler: Position-Aware Calibration of Decoding Bias in Masked Diffusion Models
+# Empirical Analysis of Decoding Biases in Masked Diffusion Models
 
 <p align="center">
-<a href="https://github.com/NEUIR/PC-Sampler" alt="GitHub">
-    <img src="https://img.shields.io/badge/GitHub-PC--Sampler-black?logo=github"/>
+<a href="https://github.com/NEUIR/Uncode" alt="GitHub">
+    <img src="https://img.shields.io/badge/GitHub-Uɴᴄᴏᴅᴇ-black?logo=github"/>
   </a>
   <a href="https://arxiv.org/pdf/2508.13021" alt="Paper">
-    <img src="https://img.shields.io/badge/Paper-PC--Sampler-B31B1B?logo=arxiv&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Paper-Uɴᴄᴏᴅᴇ-B31B1B?logo=arxiv&logoColor=white"/>
   </a>
   <a href="https://huggingface.co/papers/2508.13021" alt="HuggingFace Paper">
-    <img src="https://img.shields.io/badge/Daily Papers-PC--Sampler-yellow?logo=huggingface"/>
+    <img src="https://img.shields.io/badge/Daily Papers-Uɴᴄᴏᴅᴇ-yellow?logo=huggingface"/>
   </a>
   <a href="https://www.xiaohongshu.com/discovery/item/68c41aa8000000001d023bd2?source=webshare&xhsshare=pc_web&xsec_token=AB3G_zPuAAFw4PyGO6Pfc3UNgCJjwlPRpeAaIDzycLYIE=&xsec_source=pc_share" alt="Xiaohongshu">
-    <img src="https://img.shields.io/badge/Xiaohongshu-PC--Sampler-red?logo=xiaohongshu"/>
+    <img src="https://img.shields.io/badge/Xiaohongshu-Uɴᴄᴏᴅᴇ-red?logo=xiaohongshu"/>
   </a>
 </p>
 
@@ -20,7 +20,7 @@
 <p align="center">•
  <a href="#-introduction"> 📖 Introduction </a> •
  <a href="#-news">🎉 News</a> •
- <a href="#-pc-sampler-pipeline">✨ PC-Sampler Pipeline</a> •
+ <a href="#-pipeline">✨ Pipeline</a> •
  <a href="#-evaluation">⚡️ Evaluation</a> 
 </p>
 <p align="center" dir="auto"> •
@@ -30,28 +30,26 @@
 </p>
 
 # 📖 Introduction
-**PC-Sampler** is a novel decoding strategy for Masked Diffusion Models (MDMs) that unifies global trajectory planning with content-aware informativeness maximization. It addresses the key limitations of traditional uncertainty-based samplers: a lack of global trajectory control and a bias toward "trivial tokens." By using a position-aware weighting mechanism and a calibrated confidence score, PC-Sampler guides the decoding path and prevents the premature selection of unimportant tokens, significantly improving generation quality.
+**Uɴᴄᴏᴅᴇ** is a novel decoding strategy for Masked Diffusion Models (MDMs) that unifies global trajectory planning with content-aware informativeness maximization. It addresses the key limitations of traditional uncertainty-based samplers when applied to MDMs: a rigid boundary bias and a bias toward "trivial tokens." By using a position-aware weighting mechanism and a calibrated confidence score, Uɴᴄᴏᴅᴇ guides the decoding path and prevents the premature selection of unimportant tokens, significantly improving generation quality.
 
 # 🎉 News
 
 - 20250912: This release provides enhanced support for decoding with LLaDA, integrating a variety of recent semi- and non-autoregressive sampling strategies, including: [ReMDM](https://arxiv.org/pdf/2503.00307), [Fast-dLLM](https://arxiv.org/pdf/2505.22618v1), [Semi-AR](https://arxiv.org/abs/2502.09992), Margin-based sampler, Entropy-based sampler and Confidence-based sampler.
-- 20250819: Released our Paper on [arXiv](https://arxiv.org/abs/2508.13021). Released our Code on [GitHub](https://github.com/NEUIR/PC-Sampler). 
+- 20250819: Released our Paper on [arXiv](https://arxiv.org/abs/2508.13021). Released our Code on [GitHub](https://github.com/NEUIR/Uncode). 
 
-<!-- * 20241111: Released our [VisRAG Pipeline](https://github.com/OpenBMB/VisRAG/tree/master/scripts/demo/visrag_pipeline) on GitHub, now supporting visual understanding across multiple PDF documents. -->
+# ✨ Pipeline
 
-# ✨ PC-Sampler Pipeline
+## Uɴᴄᴏᴅᴇ
 
-## PC-sampler
-
-**PC-sampler** is a novel decoding strategy designed for advanced Masked Diffusion Models (MDMs) like [LLaDA](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) and [Dream](https://huggingface.co/Dream-org/Dream-v0-Instruct-7B). These models are powerful non-autoregressive alternatives for sequence generation, enabling flexible decoding through the iterative denoising of masked tokens.
+**Uɴᴄᴏᴅᴇr** is a novel decoding strategy designed for advanced Masked Diffusion Models (MDMs) like [LLaDA](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) and [Dream](https://huggingface.co/Dream-org/Dream-v0-Instruct-7B). These models are powerful non-autoregressive alternatives for sequence generation, enabling flexible decoding through the iterative denoising of masked tokens.
 
 # ⚙️ Setup
 
 ```bash
 git clone 
-conda create --name pc_sampler python==3.10
-conda activate pc_sampler
-cd PC_Sampler
+conda create --name Uɴᴄᴏᴅᴇ python==3.10
+conda activate Uɴᴄᴏᴅᴇ
+cd Uɴᴄᴏᴅᴇ
 pip install -r requirements.txt
 ```
 
@@ -61,7 +59,7 @@ Our method, along with all baseline methods, can be applied for prediction acros
 
 ### Eval Case
 
-This is an example of evaluation on the HumanEval dataset using PC-sampler.
+This is an example of evaluation on the HumanEval dataset using Uɴᴄᴏᴅᴇ.
 And you can run the change the `--task` and `--mode` to evaluate on other datasets and decoding methods.
 
 ```bash
@@ -94,7 +92,7 @@ All decoding methods are evaluated on the same set of datasets: **HumanEval**, *
 
 #### Evaluation Tools
 - For the **GSM8K** and **GPQA** datasets, we use `lm-eval` for evaluation.
-- For the remaining datasets, we use a custom evaluation script. Please refer to `scripts/eval.py` for more details.
+- For the remaining datasets, please refer to `scripts/eval.py` for more details.
 
 #### Consistency Note
 All methods are evaluated using the same set of evaluation scripts (including both `lm-eval` and our custom script) to ensure consistent assessment.
@@ -111,40 +109,42 @@ The heatmap results are saved in the `heatmap_results` folder.
 
 # 📈 Decoding Trajectory
 
-The choice of decoding strategy significantly impacts the generation order of Masked Diffusion Models (MDMs). A critical limitation of existing uncertainty-based methods is their tendency to exhibit a "U-shaped" trajectory, where tokens at sequence boundaries are prioritized early in decoding, followed by convergence toward the center . This pattern arises from the greedy nature of these samplers and the model's propensity to assign high confidence to structurally predictable boundary tokens .
+The choice of decoding strategy significantly impacts the generation order of Masked Diffusion Models (MDMs). A critical limitation of existing uncertainty-based methods is their tendency to exhibit a "U-shaped" trajectory (namely rigid boundary bias), where tokens at sequence boundaries are prioritized early in decoding, followed by convergence toward the center. This bias stems from the premature unmasking of boundary tokens (BOS and EOS), where the attention mechanism's local positional bias leads to elevated confidence for tokens near the sequence boundaries.
 
-In contrast, our PC-Sampler introduces explicit trajectory control through position-aware weighting, enabling adaptive generation order tailored to task requirements. Below, we visualize the decoding trajectories on the GSM8K dataset for four representative sampling strategies:
+In contrast, our Uɴᴄᴏᴅᴇ introduces explicit trajectory control through position-aware weighting, enabling adaptive generation order tailored to task requirements. Below, we visualize the decoding trajectories on the GSM8K dataset for four representative sampling strategies:
 
 ## 🔍 Trajectory Visualizations on GSM8K  
 
 | Sampling Strategy   | Decoding Trajectory Heatmap   | Sampling Strategy   | Decoding Trajectory Heatmap   |
 |---------------------|-------------------------------|---------------------|-------------------------------|
 | Confidence-based    | ![](figs/confidence.png)      | Entropy-based       | ![](figs/entropy.png)         |  
-| Margin-based        | ![](figs/margin.png)          | PC Sampler   | ![](figs/linear.png)      |  
+| Margin-based        | ![](figs/margin.png)          | Uɴᴄᴏᴅᴇ   | ![](figs/linear.png)      |  
 
 ## 🔑 Key Observations
 
-- **U-shaped Bias in Uncertainty-based Methods**: Confidence, entropy, and margin-based samplers consistently exhibit the characteristic U-shaped pattern, with early decoding of tokens at both sequence boundaries . This behavior limits their ability to capture global dependencies required for complex reasoning tasks like mathematical problem-solving.
+- **Rigid Boundary Bias in Uncertainty-based Methods**: Confidence, entropy, and margin-based samplers consistently exhibit the characteristic U-shaped pattern, with early decoding of tokens at both sequence boundaries. This behavior limits their ability to capture global dependencies required for complex reasoning tasks like mathematical problem-solving.
 
-- **Controlled Trajectory with PC-Sampler**: Our method eliminates the U-shaped bias by regulating the decoding path through exponential positional weighting. This enables a more natural progression that aligns with the logical flow of reasoning tasks, as demonstrated by the sequential trajectory in the GSM8K dataset .
+- **Trivial Token Bias**: Uncertainty-based samplers tend to prioritize semantically trivial, high-frequency tokens (e.g., newline characters, spaces, common words like "the", punctuation marks such as ".", and exclamation marks "!") during the decoding process, leading to suboptimal reasoning paths.
 
-The adaptive trajectory control of PC-Sampler directly contributes to its superior performance on GSM8K (82.2% accuracy) compared to uncertainty-based alternatives, highlighting the importance of aligning decoding order with task-specific structural demands .
+- **Debias with Uɴᴄᴏᴅᴇ**: Our method eliminates the U-shaped bias by regulating the decoding path through exponential positional weighting. This enables a more natural progression that aligns with the logical flow of reasoning tasks, as demonstrated by the sequential trajectory in the GSM8K dataset.
+
+The adaptive trajectory control of Uɴᴄᴏᴅᴇ directly contributes to its superior performance on GSM8K (82.2% accuracy) compared to uncertainty-based alternatives, highlighting the importance of aligning decoding order with task-specific structural demands.
 
 # 💻 Algorithm
 
 ## Method Overview
 
-PC-Sampler (Position-Aware Confidence-Calibrated Sampling) is a novel decoding strategy for Masked Diffusion Models (MDMs) that addresses key limitations of existing uncertainty-based sampling methods. It unifies global trajectory planning with content-aware informativeness maximization through two core components:
+Uɴᴄᴏᴅᴇ is a novel decoding strategy for Masked Diffusion Models (MDMs) that addresses key limitations of existing uncertainty-based sampling methods. It unifies global trajectory planning with content-aware informativeness maximization through two core components:
 
 1. **Position-Aware Weighting Mechanism**: Regulates the decoding path using an exponential decay function to enable flexible control over the generation order, adapting to task-specific structural demands.
 
 2. **Calibrated Confidence Score**: Suppresses premature selection of trivial tokens (e.g., punctuation, filler words) by incorporating frequency-based adjustment from a reference corpus, promoting semantically rich content generation.
 
-Extensive experiments across seven benchmarks demonstrate that PC-Sampler consistently outperforms existing MDM decoding strategies by more than 10% on average, narrowing the performance gap with state-of-the-art autoregressive models .
+Extensive experiments across seven benchmarks demonstrate that Uɴᴄᴏᴅᴇ consistently outperforms existing MDM decoding strategies by more than 10% on average, narrowing the performance gap with state-of-the-art autoregressive models .
 
 ## Algorithm Workflow
 
-The complete workflow of PC-Sampler is summarized in the following algorithm:
+The complete workflow of Uɴᴄᴏᴅᴇ is summarized in the following algorithm:
 
 **Require**: Predictor $p_\theta$, prompt $p_0$, answer length $L$, steps $T$, Hyperparams $\lambda, \alpha$; reference corpus $\mathcal{D}'$
 
