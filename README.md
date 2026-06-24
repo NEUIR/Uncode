@@ -34,6 +34,7 @@
 
 # 🎉 News
 
+- 20260407: Our paper has been **accepted to ACL 2026** ! Congratulations! 🎉
 - 20250912: This release provides enhanced support for decoding with LLaDA, integrating a variety of recent semi- and non-autoregressive sampling strategies, including: [ReMDM](https://arxiv.org/pdf/2503.00307), [Fast-dLLM](https://arxiv.org/pdf/2505.22618v1), [Semi-AR](https://arxiv.org/abs/2502.09992), Margin-based sampler, Entropy-based sampler and Confidence-based sampler.
 - 20250819: Released our Paper on [arXiv](https://arxiv.org/abs/2508.13021). Released our Code on [GitHub](https://github.com/NEUIR/Uncode). 
 
