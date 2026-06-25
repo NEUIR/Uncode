@@ -1,74 +1,106 @@
-# Empirical Analysis of Decoding Biases in Masked Diffusion Models
+<div align="center">
+
+# UNCODE: Empirical Analysis of Decoding Biases in Masked Diffusion Models
+
+<p>
+  <a href="https://github.com/NEUIR/Uncode">
+    <img src="https://img.shields.io/badge/GitHub-UNCODE-black?logo=github"/>
+  </a>
+  <a href="https://arxiv.org/abs/2508.13021">
+    <img src="https://img.shields.io/badge/Paper-arXiv:2508.13021-B31B1B?logo=arxiv&logoColor=white"/>
+  </a>
+  <a href="https://passionate11.github.io/Uncode-project-page/">
+    <img src="https://img.shields.io/badge/Project-Page-4f46e5?logo=githubpages&logoColor=white"/>
+  </a>
+  <a href="https://huggingface.co/papers/2508.13021">
+    <img src="https://img.shields.io/badge/Daily%20Papers-UNCODE-yellow?logo=huggingface&logoColor=white"/>
+  </a>
+  <a href="https://aclanthology.org/2026.acl-long.311/">
+    <img src="https://img.shields.io/badge/ACL-2026-ed1c24"/>
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg"/>
+  </a>
+</p>
+
+<p>
+  <b>A training-free decoding-calibration framework that fixes two systematic biases<br/>
+  in Masked Diffusion Models — improving reasoning &amp; planning by 7%+ across 3 MDMs and 7 benchmarks.</b>
+</p>
+
+<a href="https://passionate11.github.io/Uncode-project-page/">
+  <img src="figs/teaser.png" width="640" alt="UNCODE teaser: rigid boundary bias, trivial token bias, and the ideal decoding trajectory."/>
+</a>
+
+</div>
 
 <p align="center">
-<a href="https://github.com/NEUIR/Uncode" alt="GitHub">
-    <img src="https://img.shields.io/badge/GitHub-Uɴᴄᴏᴅᴇ-black?logo=github"/>
-  </a>
-  <a href="https://arxiv.org/pdf/2508.13021" alt="Paper">
-    <img src="https://img.shields.io/badge/Paper-Uɴᴄᴏᴅᴇ-B31B1B?logo=arxiv&logoColor=white"/>
-  </a>
-  <a href="https://huggingface.co/papers/2508.13021" alt="HuggingFace Paper">
-    <img src="https://img.shields.io/badge/Daily Papers-Uɴᴄᴏᴅᴇ-yellow?logo=huggingface"/>
-  </a>
-  <a href="https://www.xiaohongshu.com/discovery/item/68c41aa8000000001d023bd2?source=webshare&xhsshare=pc_web&xsec_token=AB3G_zPuAAFw4PyGO6Pfc3UNgCJjwlPRpeAaIDzycLYIE=&xsec_source=pc_share" alt="Xiaohongshu">
-    <img src="https://img.shields.io/badge/Xiaohongshu-Uɴᴄᴏᴅᴇ-red?logo=xiaohongshu"/>
-  </a>
+  <a href="#introduction">📖 Introduction</a> •
+  <a href="#news">🎉 News</a> •
+  <a href="#setup">⚙️ Setup</a> •
+  <a href="#evaluation">📃 Evaluation</a> •
+  <a href="#trajectory">📈 Trajectory</a> •
+  <a href="#algorithm">💻 Algorithm</a> •
+  <a href="#citation">📌 Citation</a> •
+  <a href="#contact">📧 Contact</a>
 </p>
 
+---
 
+<a id="introduction"></a>
+## 📖 Introduction
 
-<p align="center">•
- <a href="#-introduction"> 📖 Introduction </a> •
- <a href="#-news">🎉 News</a> •
- <a href="#-pipeline">✨ Pipeline</a> •
- <a href="#-evaluation">⚡️ Evaluation</a> 
-</p>
-<p align="center" dir="auto"> •
- <a href="#-decoding-trajectory">📈 Decoding Trajectory</a> •
- <a href="#-algorithm">💻 Algorithm</a> •
- <a href="#-contact">📧 Contact</a> 
-</p>
+**UNCODE** (**UN**masking **C**alibration for Dec**O**ding **DE**biasing) is a novel, *training-free* decoding strategy for Masked Diffusion Models (MDMs) that unifies **global trajectory planning** with **content-aware informativeness maximization**.
 
-# 📖 Introduction
-**Uɴᴄᴏᴅᴇ** is a novel decoding strategy for Masked Diffusion Models (MDMs) that unifies global trajectory planning with content-aware informativeness maximization. It addresses the key limitations of traditional uncertainty-based samplers when applied to MDMs: a rigid boundary bias and a bias toward "trivial tokens." By using a position-aware weighting mechanism and a calibrated confidence score, Uɴᴄᴏᴅᴇ guides the decoding path and prevents the premature selection of unimportant tokens, significantly improving generation quality.
+Uncertainty-based samplers, when applied to MDMs, suffer from two systematic decoding biases:
 
-# 🎉 News
+- **🔴 Rigid Boundary Bias** — boundary tokens (BOS/EOS, sentence edges) are decoded first, collapsing decoding into a fixed *U-shaped* trajectory and committing to an answer before the reasoning is built.
+- **🟡 Trivial Token Bias** — high-frequency, low-information tokens (punctuation, spaces, fillers) get over-prioritized, spending the decoding budget on surface structure instead of reasoning content.
 
-- 20260407: Our paper has been **accepted to ACL 2026** ! Congratulations! 🎉
-- 20250912: This release provides enhanced support for decoding with LLaDA, integrating a variety of recent semi- and non-autoregressive sampling strategies, including: [ReMDM](https://arxiv.org/pdf/2503.00307), [Fast-dLLM](https://arxiv.org/pdf/2505.22618v1), [Semi-AR](https://arxiv.org/abs/2502.09992), Margin-based sampler, Entropy-based sampler and Confidence-based sampler.
-- 20250819: Released our Paper on [arXiv](https://arxiv.org/abs/2508.13021). Released our Code on [GitHub](https://github.com/NEUIR/Uncode). 
+UNCODE fixes both with a **position-aware weighting mechanism** and a **calibrated, frequency-aware confidence score**, guiding the decoding path and suppressing premature selection of unimportant tokens — with **no fine-tuning and no architecture change**.
 
-# ✨ Pipeline
+> 📄 Paper: [arXiv:2508.13021](https://arxiv.org/abs/2508.13021) · 🌐 Project page: **[passionate11.github.io/Uncode-project-page](https://passionate11.github.io/Uncode-project-page/)**
 
-## Uɴᴄᴏᴅᴇ
+<a id="news"></a>
+## 🎉 News
 
-**Uɴᴄᴏᴅᴇr** is a novel decoding strategy designed for advanced Masked Diffusion Models (MDMs) like [LLaDA](https://huggingface.co/GSAI-ML/LLaDA-8B-Instruct) and [Dream](https://huggingface.co/Dream-org/Dream-v0-Instruct-7B). These models are powerful non-autoregressive alternatives for sequence generation, enabling flexible decoding through the iterative denoising of masked tokens.
+- **2026-04-07**: Our paper has been **accepted to ACL 2026 (Main Conference)**! 🎉
+- **2025-09-12**: Release adds enhanced LLaDA decoding support, integrating recent semi- and non-autoregressive sampling strategies: [ReMDM](https://arxiv.org/pdf/2503.00307), [Fast-dLLM](https://arxiv.org/pdf/2505.22618v1), [Semi-AR](https://arxiv.org/abs/2502.09992), Margin-, Entropy- and Confidence-based samplers.
+- **2025-08-19**: Released our [paper on arXiv](https://arxiv.org/abs/2508.13021) and [code on GitHub](https://github.com/NEUIR/Uncode).
 
-# ⚙️ Setup
+## ✨ Highlights
+
+| | |
+|---|---|
+| 🚀 **>7%** average gain over the strongest decoding baseline | 🧩 **3 × 7** MDM backbones × reasoning &amp; planning benchmarks |
+| ⚖️ **44.7 ≈ 45.3** — LLaDA-1.5 + UNCODE rivals autoregressive Qwen-2.5-7B | 🔌 **0** extra training — plug-and-play, decoding-side only |
+
+<a id="setup"></a>
+## ⚙️ Setup
 
 ```bash
-git clone 
-conda create --name Uɴᴄᴏᴅᴇ python==3.10
-conda activate Uɴᴄᴏᴅᴇ
-cd Uɴᴄᴏᴅᴇ
+git clone https://github.com/NEUIR/Uncode.git
+cd Uncode
+conda create --name uncode python==3.10
+conda activate uncode
 pip install -r requirements.txt
 ```
 
-# 📃 Evaluation
+<a id="evaluation"></a>
+## 📃 Evaluation
 
-Our method, along with all baseline methods, can be applied for prediction across mathematical reasoning, code generation, and question-answering datasets.
+UNCODE and all baseline methods can be evaluated across mathematical reasoning, code generation, and question-answering datasets: **HumanEval**, **MBPP**, **GSM8K**, **MATH-500**, **GPQA**, **Countdown**, and **Sudoku**. Results are saved to the `results/` folder.
 
-### Eval Case
+### Example — HumanEval with UNCODE
 
-This is an example of evaluation on the HumanEval dataset using Uɴᴄᴏᴅᴇ.
-And you can run the change the `--task` and `--mode` to evaluate on other datasets and decoding methods.
+Change `--task` and `--mode` to evaluate on other datasets / decoding methods.
 
 ```bash
 cd scripts
 python eval.py \
     --task 'humaneval' \
     --model_name 'GSAI-ML/LLaDA-8B-Instruct' \
-    --device 'cuda:5' \
+    --device 'cuda:0' \
     --gen_length 256 \
     --steps 256 \
     --block_length 256 \
@@ -79,108 +111,112 @@ python eval.py \
     --result_path results/humaneval_pc_sampler
 ```
 
-Following are the evaluation bash scripts for all decoding methods.
+### Baseline decoding methods
 
-| Decoding Method       | Evaluation Command                                                                 | Decoding Method       | Evaluation Command                                                                 |
-|-----------------------|-------------------------------------------------------------------------------------|-----------------------|-------------------------------------------------------------------------------------|
-| Semi-Autoregressive   | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_semi_ar.sh</pre> | Entropy               | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_entropy.sh</pre> |
-| EB-Sampler            | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_eb_sampler.sh</pre> | Fast-dLLM             | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_fast_dllm.sh</pre> |
-| Margin                | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_margin.sh</pre> | PC-sampler            | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_pc_sampler.sh</pre> |
-| ReMDM   | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_remdm.sh</pre> | Linear_Position               | <pre style="white-space: pre-wrap; margin:0;">cd scripts<br>bash eval_linear_position.sh</pre> |
+| Decoding Method | Command | Decoding Method | Command |
+|---|---|---|---|
+| Semi-Autoregressive | `bash eval_semi_ar.sh` | Entropy | `bash eval_entropy.sh` |
+| EB-Sampler | `bash eval_eb_sampler.sh` | Fast-dLLM | `bash eval_fast_dllm.sh` |
+| Margin | `bash eval_margin.sh` | PC-Sampler | `bash eval_pc_sampler.sh` |
+| ReMDM | `bash eval_remdm.sh` | Linear-Position | `bash eval_linear_position.sh` |
 
-### Evaluation of Decoding Methods
-All decoding methods are evaluated on the same set of datasets: **HumanEval**, **MBPP**, **GSM8K**, **MATH-500**, **GPQA**, **Countdown**, and **Sudoku**. Evaluation results are saved in the `results` folder.
+> All scripts live in `scripts/`. Run them from inside that folder (`cd scripts`).
 
-#### Evaluation Tools
-- For the **GSM8K** and **GPQA** datasets, we use `lm-eval` for evaluation.
-- For the remaining datasets, please refer to `scripts/eval.py` for more details.
+### Evaluation tools & consistency
 
-#### Consistency Note
-All methods are evaluated using the same set of evaluation scripts (including both `lm-eval` and our custom script) to ensure consistent assessment.
+- **GSM8K** and **GPQA** are evaluated with [`lm-eval`](https://github.com/EleutherAI/lm-evaluation-harness); the remaining datasets use `scripts/eval.py`.
+- All methods share the **same evaluation scripts** to ensure consistent, comparable assessment.
 
-### Painting Heatmap
-We provide a script to generate heatmaps for the decoding trajectories of different decoding methods. The script is located in `scripts/heatmap.sh`.
+### Painting heatmaps
+
+Generate decoding-trajectory heatmaps for different methods:
 
 ```bash
 cd scripts
 bash heatmap.sh
 ```
-#### Results
-The heatmap results are saved in the `heatmap_results` folder.
 
-# 📈 Decoding Trajectory
+Heatmap outputs are saved to the `heatmap_results/` folder.
 
-The choice of decoding strategy significantly impacts the generation order of Masked Diffusion Models (MDMs). A critical limitation of existing uncertainty-based methods is their tendency to exhibit a "U-shaped" trajectory (namely rigid boundary bias), where tokens at sequence boundaries are prioritized early in decoding, followed by convergence toward the center. This bias stems from the premature unmasking of boundary tokens (BOS and EOS), where the attention mechanism's local positional bias leads to elevated confidence for tokens near the sequence boundaries.
+<a id="trajectory"></a>
+## 📈 Decoding Trajectory
 
-In contrast, our Uɴᴄᴏᴅᴇ introduces explicit trajectory control through position-aware weighting, enabling adaptive generation order tailored to task requirements. Below, we visualize the decoding trajectories on the GSM8K dataset for four representative sampling strategies:
+The decoding strategy strongly shapes the **generation order** of MDMs. Existing uncertainty-based methods exhibit a **U-shaped** trajectory (the *rigid boundary bias*): boundary tokens (BOS/EOS) are unmasked early because the attention mechanism's local positional bias inflates their confidence, after which decoding converges inward.
 
-## 🔍 Trajectory Visualizations on GSM8K  
+UNCODE instead introduces **explicit trajectory control** via position-aware weighting, yielding an adaptive generation order tailored to each task. Trajectories on GSM8K for four representative samplers:
 
-| Sampling Strategy   | Decoding Trajectory Heatmap   | Sampling Strategy   | Decoding Trajectory Heatmap   |
-|---------------------|-------------------------------|---------------------|-------------------------------|
-| Confidence-based    | ![](figs/confidence.png)      | Entropy-based       | ![](figs/entropy.png)         |  
-| Margin-based        | ![](figs/margin.png)          | Uɴᴄᴏᴅᴇ   | ![](figs/linear.png)      |  
+<div align="center">
 
-## 🔑 Key Observations
+| Confidence-based | Entropy-based | Margin-based | **UNCODE** |
+|:---:|:---:|:---:|:---:|
+| ![](figs/confidence.png) | ![](figs/entropy.png) | ![](figs/margin.png) | ![](figs/linear.png) |
 
-- **Rigid Boundary Bias in Uncertainty-based Methods**: Confidence, entropy, and margin-based samplers consistently exhibit the characteristic U-shaped pattern, with early decoding of tokens at both sequence boundaries. This behavior limits their ability to capture global dependencies required for complex reasoning tasks like mathematical problem-solving.
+</div>
 
-- **Trivial Token Bias**: Uncertainty-based samplers tend to prioritize semantically trivial, high-frequency tokens (e.g., newline characters, spaces, common words like "the", punctuation marks such as ".", and exclamation marks "!") during the decoding process, leading to suboptimal reasoning paths.
+### 🔑 Key Observations
 
-- **Debias with Uɴᴄᴏᴅᴇ**: Our method eliminates the U-shaped bias by regulating the decoding path through exponential positional weighting. This enables a more natural progression that aligns with the logical flow of reasoning tasks, as demonstrated by the sequential trajectory in the GSM8K dataset.
+- **Rigid Boundary Bias** — confidence/entropy/margin samplers consistently show the U-shaped pattern, decoding both sequence boundaries first. This limits their ability to capture the global dependencies needed for complex reasoning.
+- **Trivial Token Bias** — uncertainty-based samplers over-prioritize semantically trivial, high-frequency tokens (newlines, spaces, `the`, `.`, `!`), leading to suboptimal reasoning paths.
+- **Debiasing with UNCODE** — exponential positional weighting removes the U-shape, producing a natural progression aligned with the logical flow of reasoning.
 
-The adaptive trajectory control of Uɴᴄᴏᴅᴇ directly contributes to its superior performance on GSM8K (82.2% accuracy) compared to uncertainty-based alternatives, highlighting the importance of aligning decoding order with task-specific structural demands.
+This adaptive trajectory control directly drives UNCODE's strong **82.2% GSM8K accuracy**, well above uncertainty-based alternatives.
 
-# 💻 Algorithm
+<a id="algorithm"></a>
+## 💻 Algorithm
 
-## Method Overview
+UNCODE addresses the limitations of uncertainty-based sampling through two core components:
 
-Uɴᴄᴏᴅᴇ is a novel decoding strategy for Masked Diffusion Models (MDMs) that addresses key limitations of existing uncertainty-based sampling methods. It unifies global trajectory planning with content-aware informativeness maximization through two core components:
+1. **Position-Aware Weighting** — an exponential decay over position regulates the decoding path, giving flexible control over generation order to match task structure.
+2. **Calibrated Confidence Score** — a frequency-based adjustment from a reference corpus suppresses premature selection of trivial tokens, promoting semantically rich content.
 
-1. **Position-Aware Weighting Mechanism**: Regulates the decoding path using an exponential decay function to enable flexible control over the generation order, adapting to task-specific structural demands.
+Across seven benchmarks, UNCODE consistently outperforms existing MDM decoding strategies, narrowing the gap to state-of-the-art autoregressive models.
 
-2. **Calibrated Confidence Score**: Suppresses premature selection of trivial tokens (e.g., punctuation, filler words) by incorporating frequency-based adjustment from a reference corpus, promoting semantically rich content generation.
+### Workflow
 
-Extensive experiments across seven benchmarks demonstrate that Uɴᴄᴏᴅᴇ consistently outperforms existing MDM decoding strategies by more than 10% on average, narrowing the performance gap with state-of-the-art autoregressive models .
+**Require**: Predictor $p_\theta$, prompt $p_0$, answer length $L$, steps $T$, hyperparameters $\lambda, \alpha$; reference corpus $\mathcal{D}'$
 
-## Algorithm Workflow
+1. $p_{\mathcal{D}'} \gets \text{FreqDist}(\mathcal{D}')$
+2. $x \gets \text{Concat}(p_0, \text{[MASK]} \times L)$
+3. **for** $t = 1$ to $T$ **do**
+   - $\mathcal{M}_t \gets \{i \mid x^i = \text{[MASK]}\}$ &nbsp;`// mask indices`
+   - **if** $\mathcal{M}_t = \emptyset$ **then break**
+   - $\hat{x}_0, \hat{p}^i \gets p_{\theta}(\cdot \mid x)$
+   - **for** each position $i \in \mathcal{M}_t$ **do**
+     - $\mathcal{C}^{(i)} \gets \hat{p}^i \cdot \log p_{\mathcal{D}'}(x^i)$
+     - $\mathcal{C}^{(i)} \gets \min(\mathcal{C}^{(i)}, \alpha)$ &nbsp;`// clip salience`
+     - $w^{(i)} \gets e^{-\lambda \cdot (i - |p_0|)}$
+     - $\text{score}^{(i)} \gets w^{(i)} \cdot \mathcal{C}^{(i)}$
+   - $n_k \gets \text{NumToReveal}(k, N, |\mathcal{M}_k|)$
+   - $\mathcal{S}_t \gets \text{TopK}(\text{score}, n_k)$ &nbsp;`// select best tokens`
+   - **for** each index $j \in \mathcal{S}_t$ **do** $x^j \gets \hat{x}_0^j$ &nbsp;`// reveal`
+4. **return** $x$
 
-The complete workflow of Uɴᴄᴏᴅᴇ is summarized in the following algorithm:
+### Hyperparameters
 
-**Require**: Predictor $p_\theta$, prompt $p_0$, answer length $L$, steps $T$, Hyperparams $\lambda, \alpha$; reference corpus $\mathcal{D}'$
+| Param | Meaning | Recommended |
+|---|---|---|
+| $\lambda$ (`--lambd`) | Positional bias strength: `0` = no bias, larger = stronger left-to-right | `0` (Sudoku), `0.25` (most tasks), `0.5` (Countdown) |
+| $\alpha$ (`--alpha`) | Clipping threshold for the salience score | `10` (stable across tasks) |
+| $p_{\mathcal{D}'}$ | Background frequency distribution from a reference corpus | see [`data/baseline`](data/baseline) |
 
-1.  $p_{\mathcal{D}'} \gets \text{FreqDist}(\mathcal{D}')$
-2.  $x \gets \text{Concat}(p_0, \text{[MASK]} \times L)$
-3.  **for** $t = 1$ to $T$ **do**
-    -   $\mathcal{M}_t \gets \{i \mid x^i = \text{[MASK]}\}$ `// Get mask indices`
-    -   **if** $\mathcal{M}_t = \emptyset$ **then**
-        -   **break**
-    -   $\hat{x}_0, \hat{p}^i \gets p_{\theta}(\cdot \mid x)$
-    -   **for** each position $i \in \mathcal{M}_t$ **do**
-        -   $\mathcal{C}^{(i)} \gets \hat{p}^i \cdot \log p_{\mathcal{D}'}(x^i)$
-        -   $\mathcal{C}^{(i)} \gets \min(\mathcal{C}^{(i)}, \alpha)$ `// Clip salience score`
-        -   $w^{(i)} \gets e^{-\lambda \cdot (i - |p_0|)}$
-        -   $\text{score}^{(i)} \gets w^{(i)} \cdot \mathcal{C}^{(i)}$
-    -   $n_k \gets \text{NumToReveal}(k, N, |\mathcal{M}_k|)$
-    -   $\mathcal{S}_t \gets \text{TopK}(\text{score}, n_k)$ `// Select best tokens`
-    -   **for** each index $j \in \mathcal{S}_t$ **do**
-        -   $x^j \gets \hat{x}_0^j$ `// Reveal selected token`
-4.  **return** $x$
+<a id="citation"></a>
+## 📌 Citation
 
-## Hyperparameters
+If you find UNCODE useful, please cite:
 
-- $\lambda$ (lambda_val): Controls positional bias strength. Typical values range from 0 (no positional bias) to 1.0 (strong left-to-right bias). Recommended: 0 for Sudoku, 0.25 for most tasks, 0.5 for Countdown .
-
-- $\alpha$: Clipping threshold for confidence scores. Recommended value: 10 (provides stable results across tasks) .
-
-- Background frequency distribution ($p_{\mathcal{D}'}$): Constructed from a comprehensive corpus combining general text, mathematical reasoning problems, and evaluation datasets (see /data/baseline) .
-
-
-
-
-# 📧 Contact
-If you have questions, suggestions, and bug reports, please email:
+```bibtex
+@inproceedings{huang-etal-2026-empirical,
+    title     = "Empirical Analysis of Decoding Biases in Masked Diffusion Models",
+    author    = "Huang, Pengcheng and Liu, Tianming and Liu, Zhenghao and Yan, Yukun and Wang, Shuo and Xiao, Tong and Chen, Zulong and Sun, Maosong",
+    booktitle = "Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+    year      = "2026",
+    publisher = "Association for Computational Linguistics",
+    url       = "https://aclanthology.org/2026.acl-long.311/",
+    pages     = "6853--6876",
+}
 ```
-pengcheng.neu@outlook.com
-```
 
+<a id="contact"></a>
+## 📧 Contact
+
+Questions, suggestions, or bug reports are welcome — please open an issue or email **pengcheng.neu@outlook.com**.
