@@ -28,9 +28,6 @@
   in Masked Diffusion Models — improving reasoning &amp; planning by 7%+ across 3 MDMs and 7 benchmarks.</b>
 </p>
 
-<a href="https://passionate11.github.io/Uncode-project-page/">
-  <img src="figs/teaser.png" width="640" alt="UNCODE teaser: rigid boundary bias, trivial token bias, and the ideal decoding trajectory."/>
-</a>
 
 </div>
 
@@ -58,6 +55,10 @@ Uncertainty-based samplers, when applied to MDMs, suffer from two systematic dec
 - **🟡 Trivial Token Bias** — high-frequency, low-information tokens (punctuation, spaces, fillers) get over-prioritized, spending the decoding budget on surface structure instead of reasoning content.
 
 UNCODE fixes both with a **position-aware weighting mechanism** and a **calibrated, frequency-aware confidence score**, guiding the decoding path and suppressing premature selection of unimportant tokens — with **no fine-tuning and no architecture change**.
+
+<a href="https://passionate11.github.io/Uncode-project-page/">
+  <img src="figs/teaser.png" width="640" alt="UNCODE teaser: rigid boundary bias, trivial token bias, and the ideal decoding trajectory."/>
+</a>
 
 > 📄 Paper: [arXiv:2508.13021](https://arxiv.org/abs/2508.13021) · 🌐 Project page: **[passionate11.github.io/Uncode-project-page](https://passionate11.github.io/Uncode-project-page/)**
 
