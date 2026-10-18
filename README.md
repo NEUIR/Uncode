@@ -51,7 +51,9 @@
 <a id="introduction"></a>
 ## 📖 Introduction
 
-**UNCODE** (**UN**masking **C**alibration for Dec**O**ding **DE**biasing) is a novel, *training-free* decoding strategy for Masked Diffusion Models (MDMs) that unifies **global trajectory planning** with **content-aware informativeness maximization**.
+**UNCODE** (**UN**masking **C**alibration for Dec**O**ding **DE**biasing) is a *training-free* decoding-calibration method for masked diffusion language models (MDMs) such as LLaDA and Dream: it fixes the rigid boundary bias and trivial token bias of uncertainty-based samplers and improves reasoning and planning by **7%+ across 3 MDMs and 7 benchmarks** (e.g., LLaDA-8B-Instruct average 33.6 → 42.7), by unifying **global trajectory planning** with **content-aware informativeness maximization**.
+
+> **Also known as PC-Sampler.** UNCODE was previously released as **PC-Sampler** ("PC-Sampler: Position-Aware Calibration of Decoding Bias in Masked Diffusion Models", [arXiv 2508.13021 v1](https://arxiv.org/abs/2508.13021v1)). The ACL 2026 version is the same line of work under its final name; please cite the ACL 2026 version below.
 
 Uncertainty-based samplers, when applied to MDMs, suffer from two systematic decoding biases:
 
@@ -219,6 +221,7 @@ If you find UNCODE useful, please cite:
     year      = "2026",
     publisher = "Association for Computational Linguistics",
     url       = "https://aclanthology.org/2026.acl-long.311/",
+    doi       = "10.18653/v1/2026.acl-long.311",
     pages     = "6853--6876",
 }
 ```
