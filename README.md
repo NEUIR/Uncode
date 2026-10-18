@@ -3,6 +3,10 @@
 # UNCODE: Empirical Analysis of Decoding Biases in Masked Diffusion Models
 
 <p>
+  <a href="https://passionate11.github.io/">Pengcheng Huang</a>, Tianming Liu, <a href="http://faculty.neu.edu.cn/liuzhenghao/zh_CN/index.htm">Zhenghao Liu</a>, Yukun Yan, Shuo Wang, <a href="http://team.neu.edu.cn/NEUNLPLab/zh_CN/article/411756/content/2225.htm">Tong Xiao</a>, Zulong Chen, Maosong Sun
+</p>
+
+<p>
   <a href="https://github.com/NEUIR/Uncode">
     <img src="https://img.shields.io/badge/GitHub-UNCODE-black?logo=github"/>
   </a>
