@@ -1,0 +1,70 @@
+cff-version: 1.2.0
+message: "If you use UNCODE (formerly PC-Sampler), please cite the ACL 2026 paper below."
+title: "UNCODE: Unmasking Calibration for Decoding Debiasing in Masked Diffusion Models"
+type: software
+repository-code: "https://github.com/NEUIR/Uncode"
+url: "https://passionate11.github.io/Uncode-project-page/"
+license: MIT
+keywords:
+  - UNCODE
+  - PC-Sampler
+  - masked diffusion models
+  - diffusion language models
+  - decoding
+  - sampling
+authors:
+  - family-names: Huang
+    given-names: Pengcheng
+    affiliation: "Northeastern University, China"
+    orcid: "https://orcid.org/0009-0006-1236-5500"
+  - family-names: Liu
+    given-names: Tianming
+  - family-names: Liu
+    given-names: Zhenghao
+  - family-names: Yan
+    given-names: Yukun
+  - family-names: Wang
+    given-names: Shuo
+  - family-names: Xiao
+    given-names: Tong
+  - family-names: Chen
+    given-names: Zulong
+  - family-names: Sun
+    given-names: Maosong
+preferred-citation:
+  type: conference-paper
+  title: "Empirical Analysis of Decoding Biases in Masked Diffusion Models"
+  authors:
+    - family-names: Huang
+      given-names: Pengcheng
+    - family-names: Liu
+      given-names: Tianming
+    - family-names: Liu
+      given-names: Zhenghao
+    - family-names: Yan
+      given-names: Yukun
+    - family-names: Wang
+      given-names: Shuo
+    - family-names: Xiao
+      given-names: Tong
+    - family-names: Chen
+      given-names: Zulong
+    - family-names: Sun
+      given-names: Maosong
+  collection-title: "Proceedings of the 64th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)"
+  conference:
+    name: "ACL 2026"
+  publisher:
+    name: "Association for Computational Linguistics"
+  year: 2026
+  start: 6853
+  end: 6876
+  doi: "10.18653/v1/2026.acl-long.311"
+  url: "https://aclanthology.org/2026.acl-long.311/"
+  identifiers:
+    - type: doi
+      value: "10.18653/v1/2026.acl-long.311"
+      description: "ACL Anthology"
+    - type: url
+      value: "https://arxiv.org/abs/2508.13021"
+      description: "arXiv 2508.13021 (earlier versions titled PC-Sampler)"
