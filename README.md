@@ -62,6 +62,8 @@ Uncertainty-based samplers, when applied to MDMs, suffer from two systematic dec
 
 UNCODE fixes both with a **position-aware weighting mechanism** and a **calibrated, frequency-aware confidence score**, guiding the decoding path and suppressing premature selection of unimportant tokens — with **no fine-tuning and no architecture change**.
 
+**Use it as a baseline.** For studies of unmasking order or reasoning in masked diffusion language models, compare UNCODE with confidence-based decoding while holding the checkpoint, prompt and decoding budget fixed. Start with the [MATH-500 comparison](#compare-uncode-with-confidence-decoding-on-math-500). For comparisons with efficient samplers, see Table 2 of the [ACL paper](https://aclanthology.org/2026.acl-long.311.pdf) for both task accuracy and speed.
+
 <div align="center">
   <a href="https://passionate11.github.io/Uncode-project-page/">
     <img src="figs/teaser.png" width="640" alt="UNCODE teaser: rigid boundary bias, trivial token bias, and the ideal decoding trajectory."/>
@@ -99,6 +101,36 @@ pip install -r requirements.txt
 ## 📃 Evaluation
 
 UNCODE and all baseline methods can be evaluated across mathematical reasoning, code generation, and question-answering datasets: **HumanEval**, **MBPP**, **GSM8K**, **MATH-500**, **GPQA**, **Countdown**, and **Sudoku**. Results are saved to the `results/` folder.
+
+### Compare UNCODE with confidence decoding on MATH-500
+
+After [setup](#setup), run both conditions on a CUDA GPU with enough memory for LLaDA-8B-Instruct. Both use the bundled MATH-500 split, the same four-shot prompt, and 1,024 generation tokens and denoising steps. `original` selects confidence-based decoding. `pc_sampler` is the CLI name for UNCODE.
+
+```bash
+(
+    set -e
+    cd scripts
+    result_dir=$(mktemp -d)
+    data_path=../data/math500.jsonl
+    for mode in original pc_sampler; do
+        python eval.py \
+            --task math500 \
+            --model_name GSAI-ML/LLaDA-8B-Instruct \
+            --device cuda:0 \
+            --gen_length 1024 --steps 1024 --block_length 1024 \
+            --temperature 0 \
+            --mode "$mode" --lambd 0.25 --alpha 10 \
+            --baseline_name ../data/baseline/reference_corpus.json \
+            --data_path "$data_path" \
+            --result_path "$result_dir/math500_$mode.txt"
+    done
+    awk '/^Total Accuracy:/ {print FILENAME, $NF}' "$result_dir"/math500_*.txt
+)
+```
+
+To check the setup on one example, add `head -n 1 "$data_path" > "$result_dir/one-example.jsonl"` and `data_path="$result_dir/one-example.jsonl"` before the loop. Use the full split when reporting an accuracy comparison.
+
+The script reports accuracy as a fraction. [Table 1 of the paper](https://aclanthology.org/2026.acl-long.311.pdf#page=7) reports **20.8%** for confidence decoding and **34.8%** for UNCODE on this checkpoint. Use these as published reference values. For your own comparisons, report the checkpoint and revision, prompt, generation length, denoising steps, block length, and UNCODE's `--lambd` and `--alpha`.
 
 ### Example — HumanEval with UNCODE
 
@@ -168,7 +200,7 @@ UNCODE instead introduces **explicit trajectory control** via position-aware wei
 - **Trivial Token Bias** — uncertainty-based samplers over-prioritize semantically trivial, high-frequency tokens (newlines, spaces, `the`, `.`, `!`), leading to suboptimal reasoning paths.
 - **Debiasing with UNCODE** — exponential positional weighting removes the U-shape, producing a natural progression aligned with the logical flow of reasoning.
 
-This adaptive trajectory control directly drives UNCODE's strong **82.2% GSM8K accuracy**, well above uncertainty-based alternatives.
+On LLaDA-1.5-8B, UNCODE reaches **82.2% GSM8K accuracy** in [Table 1 of the paper](https://aclanthology.org/2026.acl-long.311.pdf#page=7).
 
 <a id="algorithm"></a>
 ## 💻 Algorithm
@@ -180,32 +212,16 @@ UNCODE addresses the limitations of uncertainty-based sampling through two core 
 
 Across seven benchmarks, UNCODE consistently outperforms existing MDM decoding strategies, narrowing the gap to state-of-the-art autoregressive models.
 
-### Workflow
+### Where to integrate it
 
-**Require**: Predictor $p_\theta$, prompt $p_0$, answer length $L$, steps $T$, hyperparameters $\lambda, \alpha$; reference corpus $\mathcal{D}'$
-
-1. $p_{\mathcal{D}'} \gets \text{FreqDist}(\mathcal{D}')$
-2. $x \gets \text{Concat}(p_0, \text{[MASK]} \times L)$
-3. **for** $t = 1$ to $T$ **do**
-   - $\mathcal{M}_t \gets \{i \mid x^i = \text{[MASK]}\}$ &nbsp;`// mask indices`
-   - **if** $\mathcal{M}_t = \emptyset$ **then break**
-   - $\hat{x}_0, \hat{p}^i \gets p_{\theta}(\cdot \mid x)$
-   - **for** each position $i \in \mathcal{M}_t$ **do**
-     - $\mathcal{C}^{(i)} \gets \hat{p}^i \cdot \log p_{\mathcal{D}'}(x^i)$
-     - $\mathcal{C}^{(i)} \gets \min(\mathcal{C}^{(i)}, \alpha)$ &nbsp;`// clip salience`
-     - $w^{(i)} \gets e^{-\lambda \cdot (i - |p_0|)}$
-     - $\text{score}^{(i)} \gets w^{(i)} \cdot \mathcal{C}^{(i)}$
-   - $n_k \gets \text{NumToReveal}(k, N, |\mathcal{M}_k|)$
-   - $\mathcal{S}_t \gets \text{TopK}(\text{score}, n_k)$ &nbsp;`// select best tokens`
-   - **for** each index $j \in \mathcal{S}_t$ **do** $x^j \gets \hat{x}_0^j$ &nbsp;`// reveal`
-4. **return** $x$
+At each denoising step, UNCODE reweights the scores used to rank masked positions before the sampler selects which tokens to reveal. For the method, see [Section 4.2, equations 5–7](https://aclanthology.org/2026.acl-long.311.pdf#page=5). The released LLaDA code uses `generate_with_pc_sampler` in [`src/generate.py`](src/generate.py), with `pc_sampler_function` providing the scoring step. When adapting it to a different checkpoint, check the mask token ID and that the reference frequencies match the tokenizer vocabulary. Appendix A.8 describes the combinations with efficient samplers.
 
 ### Hyperparameters
 
 | Param | Meaning | Recommended |
 |---|---|---|
 | $\lambda$ (`--lambd`) | Positional bias strength: `0` = no bias, larger = stronger left-to-right | `0` (Sudoku), `0.25` (most tasks), `0.5` (Countdown) |
-| $\alpha$ (`--alpha`) | Clipping threshold for the salience score | `10` (stable across tasks) |
+| $\alpha$ (`--alpha`) | In the released LLaDA code, caps confidence-weighted self-information before positional weighting | `10` |
 | $p_{\mathcal{D}'}$ | Background frequency distribution from a reference corpus | see [`data/baseline`](data/baseline) |
 
 <a id="citation"></a>
