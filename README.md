@@ -62,6 +62,8 @@ Uncertainty-based samplers, when applied to MDMs, suffer from two systematic dec
 
 UNCODE fixes both with a **position-aware weighting mechanism** and a **calibrated, frequency-aware confidence score**, guiding the decoding path and suppressing premature selection of unimportant tokens — with **no fine-tuning and no architecture change**.
 
+For related work on position selection, parallel commitment, and lookahead, see the [Unmasking Order reading guide](https://passionate11.github.io/unmasking-order/).
+
 **Use it as a baseline.** For studies of unmasking order or reasoning in masked diffusion language models, compare UNCODE with confidence-based decoding while holding the checkpoint, prompt and decoding budget fixed. Start with the [MATH-500 comparison](#compare-uncode-with-confidence-decoding-on-math-500). For comparisons with efficient samplers, see Table 2 of the [ACL paper](https://aclanthology.org/2026.acl-long.311.pdf) for both task accuracy and speed.
 
 <div align="center">
